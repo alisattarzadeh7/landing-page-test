@@ -1,9 +1,18 @@
+import { TextField } from '@mui/material';
 import type {NextPage} from 'next'
+import { ReactNode } from "react";
+import Header from "./Header"
+interface LayoutProps{
+    children:ReactNode
+}
 
-const index: NextPage = () => {
+
+const index: NextPage<LayoutProps> = ({children}) => {
     return (
-        <>
-        </>
+        <div >
+            <Header/>
+            {children}
+        </div>
     )
 }
 

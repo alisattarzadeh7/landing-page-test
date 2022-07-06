@@ -1,11 +1,11 @@
 
 import { configureStore } from '@reduxjs/toolkit'
 import {store} from "next/dist/build/output/store";
-import counterReducer from "./features/counter/counterSlice"
+import LayoutSlice from "./slices/LayoutSlice";
 
 export default configureStore({
     reducer: {
-        counter: counterReducer,
+        layout: LayoutSlice,
     },
 })
 
