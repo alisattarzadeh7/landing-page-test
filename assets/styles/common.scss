@@ -1,0 +1,41 @@
+@font-face {
+  font-family: YekanRegular;
+  src: url("../fonts/font-ir/iranyekanwebregular(fanum).ttf") format('truetype');
+}
+
+@font-face {
+  font-family: HelveticaLt;
+  src: url("../fonts/Font-EN/HelveticaLt.ttf") format("truetype");
+}
+
+.position-fixed{
+  position: fixed !important
+}
+
+.h-fit-content{
+  height:fit-content;
+}
+
+.br-15{
+  border-radius:15px;
+}
+
+.position-absolute{
+  position:absolute !important
+}
+
+.position-relative{
+  position:relative !important
+}
+
+.w-100{
+  width:100%;
+}
+
+.flex{
+  display: flex;
+}
+
+.column{
+  flex-direction: column;
+}
