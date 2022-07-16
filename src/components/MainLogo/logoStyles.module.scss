@@ -1,0 +1,17 @@
+
+.mainShadowContainer{
+  //min-width:1600px;
+  width:100vw;
+  height:100%;
+  position:absolute;
+  top:-50px;
+  min-height:700px;
+}
+
+.textLogoContainer{
+  width:20vw;
+  height:20vh;
+  top: 30vh;
+  left: calc(50vw - 50vh );
+  position:absolute ;
+}

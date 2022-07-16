@@ -39,3 +39,18 @@
 .column{
   flex-direction: column;
 }
+
+.space-between{
+  justify-content: space-between;
+}
+
+.middle{
+  align-items: center;
+}
+
+.bold{
+  font-weight: bold;
+  i,span,label{
+    font-weight: bold;
+  }
+}
