@@ -4,7 +4,7 @@ import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
-import {TableHead} from '@mui/material';
+import {TableHead, TableSortLabel} from '@mui/material';
 
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
     if (b[orderBy] < a[orderBy]) {
@@ -45,42 +45,40 @@ function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) 
 }
 
 
-// function EnhancedTableHead(props: EnhancedTableProps) {
-//     const { order, orderBy, onRequestSort } =
-//         props;
-//     const createSortHandler =
-//         (property: keyof Data) => (event: React.MouseEvent<unknown>) => {
-//             onRequestSort(event, property);
-//         };
-//
-//     return (
-//         <TableHead>
-//             <TableRow>
-//                 {headCells.map((headCell) => (
-//                     <TableCell
-//                         key={headCell.id}
-//                         align={headCell.numeric ? 'right' : 'left'}
-//                         padding={headCell.disablePadding ? 'none' : 'normal'}
-//                         sortDirection={orderBy === headCell.id ? order : false}
-//                     >
-//                         <TableSortLabel
-//                             active={orderBy === headCell.id}
-//                             direction={orderBy === headCell.id ? order : 'asc'}
-//                             onClick={createSortHandler(headCell.id)}
-//                         >
-//                             {headCell.label}
-//                             {orderBy === headCell.id ? (
-//                                 <Box component="span" sx={visuallyHidden}>
-//                                     {order === 'desc' ? 'sorted descending' : 'sorted ascending'}
-//                                 </Box>
-//                             ) : null}
-//                         </TableSortLabel>
-//                     </TableCell>
-//                 ))}
-//             </TableRow>
-//         </TableHead>
-//     );
-// }
+
+function EnhancedTableHead(props) {
+    const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
+        props;
+    const createSortHandler = (property) => (event) => {
+        onRequestSort(event, property);
+    };
+
+    return (
+        <TableHead>
+            <TableRow>
+                {props.headers.map((headCell,index) => (
+                    <TableCell
+                        key={index}
+                        sortDirection={orderBy === headCell.accessor ? order : false}
+                    >
+                        <TableSortLabel
+                            active={orderBy === headCell.accessor}
+                            direction={orderBy === headCell.accessor ? order : 'asc'}
+                            onClick={createSortHandler(headCell.accessor)}
+                        >
+                            {headCell.label}
+                            {/*{orderBy === headCell.id ? (*/}
+                            {/*    <Box component="span" sx={visuallyHidden}>*/}
+                            {/*        {order === 'desc' ? 'sorted descending' : 'sorted ascending'}*/}
+                            {/*    </Box>*/}
+                            {/*) : null}*/}
+                        </TableSortLabel>
+                    </TableCell>
+                ))}
+            </TableRow>
+        </TableHead>
+    );
+}
 
 
 interface SatrexTableProps {
@@ -90,29 +88,18 @@ interface SatrexTableProps {
 
 const SatrexTable: React.FC<SatrexTableProps> = ({rows, headers}) => {
     const [order, setOrder] = React.useState<Order>('asc');
-    const [orderBy, setOrderBy] = React.useState('calories');
+    const [orderBy, setOrderBy] = React.useState('');
 
-    const getTds = (item) => {
-        console.log(item)
-        return Object.values(item).map((value, index) => {
-            return (
-                <TableCell key={index} component="td" scope="row" align="center">
-                    {value}
-                </TableCell>
-            );
-        })
-        return ''
+
+
+    const handleRequestSort = (
+        event: React.MouseEvent<unknown>,
+        property: keyof Data,
+    ) => {
+        const isAsc = orderBy === property && order === 'asc';
+        setOrder(isAsc ? 'desc' : 'asc');
+        setOrderBy(property);
     };
-
-
-    // const handleRequestSort = (
-    //     event: React.MouseEvent<unknown>,
-    //     property: keyof Data,
-    // ) => {
-    //     const isAsc = orderBy === property && order === 'asc';
-    //     setOrder(isAsc ? 'desc' : 'asc');
-    //     setOrderBy(property);
-    // };
     //
     // const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
     //     if (event.target.checked) {
@@ -131,27 +118,26 @@ const SatrexTable: React.FC<SatrexTableProps> = ({rows, headers}) => {
                 sx={{minWidth: 750}}
                 aria-labelledby="tableTitle"
             >
-                <TableHead>
-                    <TableRow>
-                        {
-                            headers.map((item, index) => (
-                                <TableCell align="center" key={index}>{item.label}</TableCell>
-                            ))
-                        }
-                    </TableRow>
-                </TableHead>
-                {/*<EnhancedTableHead*/}
-                {/*    numSelected={selected.length}*/}
-                {/*    order={order}*/}
-                {/*    orderBy={orderBy}*/}
-                {/*    onSelectAllClick={handleSelectAllClick}*/}
-                {/*    onRequestSort={handleRequestSort}*/}
-                {/*    rowCount={rows.length}*/}
-                {/*/>*/}
+                {/*<TableHead>*/}
+                {/*    <TableRow>*/}
+                {/*        {*/}
+                {/*            headers.map((item, index) => (*/}
+                {/*                <TableCell align="center" key={index}>{item.label}</TableCell>*/}
+                {/*            ))*/}
+                {/*        }*/}
+                {/*    </TableRow>*/}
+                {/*</TableHead>*/}
+                <EnhancedTableHead
+                    headers={headers}
+                    order={order}
+                    orderBy={orderBy}
+                    rowCount={rows.length}
+                    onRequestSort={handleRequestSort}
+                />
                 <TableBody>
                     {/* if you don't need to support IE11, you can replace the `stableSort` call with:
-              rows.slice().sort(getComparator(order, orderBy)) */}
-                    {rows.map((row, index) => {
+             */}
+                    {rows.sort(getComparator(order, orderBy)).map((row, index) => {
 
 
                         return (

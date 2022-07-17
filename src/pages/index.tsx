@@ -74,8 +74,13 @@ const Home: NextPage<HomeProps> = () => {
                         <SatrexTable
                             rows={data.map(item=>({
                                 ...item,
-                                name:<><img src={item.sourceAssetImageAddress} style={{width:35}} alt="coin image"/><span>{item.sourceAssetPersianTitle}</span></>,
-                                marketImage:<><img src={item.sourceAssetUrlGraphData} alt="market chart image"/></>
+                                name:<>
+                                    {/*<img src={item.sourceAssetImageAddress} style={{width:35}} alt="coin image"/>*/}
+                                    {/*<span>{item.sourceAssetPersianTitle}</span>*/}
+                                </>,
+                                marketImage:<>
+                                    {/*<img src={item.sourceAssetUrlGraphData} alt="market chart image"/>*/}
+                                </>
                             }))}
                             headers={[
                             {
