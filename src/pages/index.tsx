@@ -17,6 +17,7 @@ import { useTranslation } from 'next-i18next'
 import SatrexButton from "../components/SatrexButton";
 import Image from 'next/image'
 import MainLogo from "../components/MainLogo/index";
+import SatrexTable from "../components/SatrexTable";
 
 
 interface HomeProps {
@@ -66,6 +67,34 @@ const Home: NextPage<HomeProps> = () => {
                         </div>
                     </div>
                     {/*<TextField label="Name" variant="standard" />*/}
+                </div>
+                <div className={styles.coinListTableContainer}>
+                    {
+                        data &&
+                        <SatrexTable
+                            rows={data.map(item=>({
+                                ...item,
+                                name:<><img src={item.sourceAssetImageAddress} style={{width:35}} alt="coin image"/><span>{item.sourceAssetPersianTitle}</span></>,
+                                marketImage:<><img src={item.sourceAssetUrlGraphData} alt="market chart image"/></>
+                            }))}
+                            headers={[
+                            {
+                                label:t('home.table.column.name'),
+                                accessor:'name',
+                            },            {
+                                label:t('home.table.column.symbol'),
+                                accessor:'pairSymbol',
+                            },            {
+                                label:t('home.table.column.lastPrice'),
+                                accessor:'lastPriceInToman',
+                            },            {
+                                label:t('home.table.column.last24Change'),
+                                accessor:'changeForLastIn24HoursInPercent',
+                            },            {
+                                label:t('home.table.column.market'),
+                                accessor:'marketImage',
+                            }]}/>
+                    }
                 </div>
             </main>
 
