@@ -3,5 +3,10 @@
   "home.inMinutes": "در چند دقیقه",
   "home.joinUs": "همین حالا به صرافی ما ملحق شوید",
   "home.doRegisterBtn": "ثبت نام کنید",
-  "home.cryptoCurrencies": "ارزهای دیجیتال"
+  "home.cryptoCurrencies": "ارزهای دیجیتال",
+  "home.table.column.name": "نام",
+  "home.table.column.symbol": "نماد",
+  "home.table.column.lastPrice": "آخرین قیمت",
+  "home.table.column.last24Change": "تغییرات ۲۴ ساعته",
+  "home.table.column.market": "مارکت کپ"
 }

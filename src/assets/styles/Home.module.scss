@@ -86,12 +86,26 @@
 
 
 .coinListTableContainer{
-  padding:0 7%;
+  padding:0 9%;
 }
 
 .coinListTitleStyles{
-  padding:0 7%;
+  padding:0 9%;
   margin-top: 200px;
+}
+
+.observeMarketTitle{
+  font-family:YekanBold !important;
+  font-size:30px;
+  margin:{
+    top:40px;
+    bottom:10px;
+  }
+}
+.observeMarketSubTitle{
+  color:var(--satrex-gray);
+  font-size:20px;
+  //margin:20px 0px;
 }
 
 .applicationPart{

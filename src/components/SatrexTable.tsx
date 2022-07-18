@@ -160,7 +160,7 @@ const SatrexTable: React.FC<SatrexTableProps> = ({rows, headers}) => {
                                     {
                                         headers.map(item => {
                                             return (
-                                                <TableCell key={index} component="td" scope="row" align="center">
+                                                <TableCell key={index} component="td" scope="row" >
                                                     {row[item.accessor]}
                                                 </TableCell>
                                             )

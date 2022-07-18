@@ -16,8 +16,9 @@ import SatrexTable from "../components/SatrexTable";
 import searchIcon from "../../public/icons/searchIcon.svg"
 import HomeApplicationPart from "../components/HomeApplicationPart";
 import {motion, useViewportScroll, useTransform} from 'framer-motion'
-import {useEffect} from "react";
+import React, {useEffect} from "react";
 import {headerReturned, headerSwitched} from "../utils/events";
+import PercentageFormater from "../components/PercentageFormater";
 
 interface HomeProps {
     // coins: Coin[]
@@ -105,8 +106,8 @@ const Home: NextPage<HomeProps> = () => {
                     {/*<TextField label="Name" variant="standard" />*/}
                 </div>
                 <div className={styles.coinListTitleStyles}>
-                    <div className="flex"><h1>{t('بررسی روند بازار')}</h1></div>
-                    <div className="flex space-between"><h2>{t('بررسی روند بازار')}</h2>
+                    <div className="flex"><span className={styles.observeMarketTitle}>{t('بررسی روند بازار')}</span></div>
+                    <div className="flex space-between"><span className={styles.observeMarketSubTitle}>{t('اکسپرس رهبران بازار ارزهای دیجیتال')}</span>
 
                     </div>
                 </div>
@@ -123,7 +124,8 @@ const Home: NextPage<HomeProps> = () => {
                                 </div>,
                                 marketImage: <>
                                     <img src={item.sourceAssetUrlGraphData} alt="market chart image"/>
-                                </>
+                                </>,
+                                changeForLastIn24HoursInPercent:<span className="faNum"><PercentageFormater value={item.changeForLastIn24HoursInPercent }/></span>,
                             }))}
                             headers={[
                                 {
