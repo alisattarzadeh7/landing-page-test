@@ -8,10 +8,22 @@
   min-height:700px;
 }
 
+.topShadowEffect{
+  width:90%;
+  height:100%;
+  left:10%;
+  background:var(--satrex-dark-blue);
+  position:relative;
+  z-index:6;
+  filter:blur(20px)
+}
+
 .textLogoContainer{
   width:20vw;
   height:20vh;
   top: 30vh;
+  z-index:7;
   left: calc(50vw - 50vh );
   position:absolute ;
 }
+

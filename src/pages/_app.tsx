@@ -3,7 +3,7 @@ import type {AppProps} from 'next/app'
 import Providers from "../config/Providers";
 import Layout from '../components/Layout';
 import { appWithTranslation } from 'next-i18next';
-
+import "../config/theme/variables.css";
 function MyApp({Component, pageProps}: AppProps) {
     return <Providers>
         <Layout>

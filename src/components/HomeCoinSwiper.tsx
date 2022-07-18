@@ -7,6 +7,8 @@ import "swiper/css/pagination";
 import Coin from "../http/models/Coin";
 import {Divider, useMediaQuery} from "@mui/material";
 import SatrexNumFormat from "./SatrexNumFormat";
+import styles from "../assets/styles/Home.module.scss"
+
 
 interface HomeCoinSwiperProps{
     coins:Coin[]
@@ -49,26 +51,33 @@ const HomeCoinSwiper: React.FC<HomeCoinSwiperProps> = ({coins}) => {
                 dir="ltr"
                 className="coinSwiperSlides"
             >
-                {coins.filter(item=>item.destinationAssetSymbol !== 'USDT').map((item,index)=>{
+                {coins.map((item,index)=>{
                     return (
                         <SwiperSlide>
-
                             <div className="flex column space-between w-100">
                                 <div className="flex middle">
-                                    <img src={item?.sourceAssetImageAddress} alt={item?.pairSymbol+ ' image'} style={{width:40}}/>
+                                    <img src={item?.sourceAssetImageAddress} alt={item?.pairSymbol+ ' image'} style={{width:35}}/>
                                     &nbsp;&nbsp;
-                                    {
-                                        item?.pairSymbol
-                                    }
-                                    <PercentageFormater value={item?.changeForLastIn24HoursInPercent + 1}/>
+                                    <span className={styles.pairSymbolStyle}>
+                                        {
+                                            item?.pairSymbol
+                                        }
+                                    </span>
+                                    <span className={styles.changePercentStyle}>
+                                      <PercentageFormater value={item?.changeForLastIn24HoursInPercent }/>
+                                    </span>
+
                                 </div>
                                 <div className="flex column space-between" style={{minHeight:50,marginTop:10}}>
-                                    <div className="flex bold">
+                                    <div className={styles.tomanPrice} >
                                         <SatrexNumFormat  num={item?.lastPriceInToman} />
                                         {/*{item.lastPriceInToman}*/}
                                     </div>
-                                    <div className="flex">
-                                        ≈ &nbsp;{item?.lastPriceInTether}
+                                    <div className={styles.tetherPrice} >
+                                        ≈ &nbsp;
+                                        <SatrexNumFormat
+                                            num={item?.lastPriceInTether}
+                                        />&nbsp; USDT
                                     </div>
                                 </div>
                             </div>

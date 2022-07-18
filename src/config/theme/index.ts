@@ -13,6 +13,9 @@ const componentsOverides = {
     palette: {
         orange:{
             main:'#fa663e'
+        },
+        white:{
+            main:'#fff'
         }
     } as Palette,
 }

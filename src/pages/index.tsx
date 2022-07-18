@@ -1,24 +1,23 @@
 import {Grid} from '@mui/material'
 import type {NextPage} from 'next'
 import Head from 'next/head'
-
+import Image from 'next/image'
 import Coin from '../http/models/Coin'
-
 import styles from "../assets/styles/Home.module.scss"
-import mainLogo from "../assets/images/loginComponent/mainLogo.svg"
-import topShadow from "../assets/images/loginComponent/topShadow.svg"
-import bottomShadow from "../assets/images/loginComponent/bottomShadow.svg"
 import 'swiper/css';
 import "swiper/css/pagination";
 import HomeCoinSwiper from "../components/HomeCoinSwiper";
 import useSWR from 'swr'
-import { serverSideTranslations } from 'next-i18next/serverSideTranslations';
-import { useTranslation } from 'next-i18next'
+import {serverSideTranslations} from 'next-i18next/serverSideTranslations';
+import {useTranslation} from 'next-i18next'
 import SatrexButton from "../components/SatrexButton";
-import Image from 'next/image'
 import MainLogo from "../components/MainLogo/index";
 import SatrexTable from "../components/SatrexTable";
-
+import searchIcon from "../../public/icons/searchIcon.svg"
+import HomeApplicationPart from "../components/HomeApplicationPart";
+import {motion, useViewportScroll, useTransform} from 'framer-motion'
+import {useEffect} from "react";
+import {headerReturned, headerSwitched} from "../utils/events";
 
 interface HomeProps {
     // coins: Coin[]
@@ -26,8 +25,28 @@ interface HomeProps {
 
 const Home: NextPage<HomeProps> = () => {
 
-    const { data, error } = useSWR('getALlCoins', Coin.getALlCoins)
-    const { t } = useTranslation('common');
+    const {data, error} = useSWR('getALlCoins', Coin.getALlCoins)
+    const {t} = useTranslation('common');
+    const {scrollY} = useViewportScroll()
+    const y = useTransform(scrollY, [0, 200], [-0, -100])
+    const opacity = useTransform(scrollY, [0, 300], [1, 0])
+    const coinSwiperOpacity = useTransform(scrollY, [250, 600], [1, 0])
+    const coinSwiperY = useTransform(scrollY, [250, 600], [0, 150])
+    let headerSwitchedTemp = false;
+    let headerReturnedTemp = false;
+    useEffect(()=>{
+        scrollY.onChange(value=>{
+            if(value > 500 && !headerSwitchedTemp){
+                window.dispatchEvent(headerSwitched);
+                headerSwitchedTemp = true
+                headerReturnedTemp = false
+            }else if(value < 500 && !headerReturnedTemp){
+                window.dispatchEvent(headerReturned);
+                headerSwitchedTemp = false
+                headerReturnedTemp = true
+            }
+        })
+    },[scrollY])
 
 
     return (
@@ -39,75 +58,100 @@ const Home: NextPage<HomeProps> = () => {
             </Head>
             <main className={styles.mainBanner}>
                 <div className={styles.logoContainer}>
-                    <MainLogo />
+                    <MainLogo/>
                 </div>
                 <div className={styles.bannerContent + '  position-relative'}>
                     <div className={styles.coinCampaign}>
 
-                        <div>
-                            <h2>{t('home.sell&Buy')}</h2>
-                            <h1 className="bold">{t('home.cryptoCurrencies')}{t('home.inMinutes')}</h1>
-                            <h3>{t('home.joinUs')}</h3>
-                            <SatrexButton label={t('home.doRegisterBtn')} variant="contained" color="orange"  />
+                        <div style={{paddingBottom: 60}}>
+                            <motion.div style={{y, opacity}}>
+                                <h2 className={styles.buyAndSellStyle}>{t('home.sell&Buy')}</h2>
+                            </motion.div>
+                            <motion.div style={{y, opacity}} className="flex align-items-end">
+                                <span className={styles.cryptoTitle}>
+                                    {t('home.cryptoCurrencies')}
+                                </span>
+                                <span className={styles.inMinutesStyle}>{t('home.inMinutes')}</span>
+                            </motion.div>
+                            <motion.div style={{y, opacity}}>
+                                <h3 className={styles.joinUsStyle}>{t('home.joinUs')}</h3>
+                            </motion.div>
+                            <motion.div style={{y, opacity}}>
+                                <SatrexButton label={t('home.doRegisterBtn')} style={{minWidth: 150}}
+                                              variant="contained"
+                                              color="orange"/>
+                            </motion.div>
                         </div>
-                        <div className="flex column" >
-                            <div className={styles.coinSwiper}>
+                        <div className="flex column">
+                            <motion.div className={styles.coinSwiper} style={{y:coinSwiperY,opacity:coinSwiperOpacity}}>
                                 {
                                     data &&
-                                    <HomeCoinSwiper coins={data}/>
+                                    <HomeCoinSwiper
+                                        coins={data.filter(item => item.destinationAssetSymbol !== 'USDT')}/>
                                 }
-                            </div>
+                            </motion.div>
                             <div className={styles.campaign}>
                                 <Grid container spacing={4}>
-                                    <Grid xs={4} item><img src="https://satrex.ir/wp-content/uploads/2022/07/7.jpg" alt=""/></Grid>
-                                    <Grid xs={4} item><img src="https://satrex.ir/wp-content/uploads/2022/07/9.jpg" alt=""/></Grid>
-                                    <Grid xs={4} item><img src="https://satrex.ir/wp-content/uploads/2022/07/8.jpg" alt=""/></Grid>
+                                    <Grid xs={4} item><img src="https://satrex.ir/wp-content/uploads/2022/07/7.jpg"
+                                                           alt=""/></Grid>
+                                    <Grid xs={4} item><img src="https://satrex.ir/wp-content/uploads/2022/07/9.jpg"
+                                                           alt=""/></Grid>
+                                    <Grid xs={4} item><img src="https://satrex.ir/wp-content/uploads/2022/07/8.jpg"
+                                                           alt=""/></Grid>
                                 </Grid>
                             </div>
                         </div>
                     </div>
                     {/*<TextField label="Name" variant="standard" />*/}
                 </div>
+                <div className={styles.coinListTitleStyles}>
+                    <div className="flex"><h1>{t('بررسی روند بازار')}</h1></div>
+                    <div className="flex space-between"><h2>{t('بررسی روند بازار')}</h2>
+
+                    </div>
+                </div>
                 <div className={styles.coinListTableContainer}>
                     {
                         data &&
                         <SatrexTable
-                            rows={data.map(item=>({
+                            rows={data.filter(item => item.destinationAssetSymbol !== 'USDT').map(item => ({
                                 ...item,
-                                name:<>
-                                    {/*<img src={item.sourceAssetImageAddress} style={{width:35}} alt="coin image"/>*/}
-                                    {/*<span>{item.sourceAssetPersianTitle}</span>*/}
-                                </>,
-                                marketImage:<>
-                                    {/*<img src={item.sourceAssetUrlGraphData} alt="market chart image"/>*/}
+                                name: <div className="flex middle">
+                                    <img src={item.sourceAssetImageAddress} style={{width: 35}}
+                                         alt="coin image"/>&nbsp;&nbsp;
+                                    <span style={{height: 'fit-content'}}>{item.sourceAssetPersianTitle}</span>
+                                </div>,
+                                marketImage: <>
+                                    <img src={item.sourceAssetUrlGraphData} alt="market chart image"/>
                                 </>
                             }))}
                             headers={[
-                            {
-                                label:t('home.table.column.name'),
-                                accessor:'name',
-                            },            {
-                                label:t('home.table.column.symbol'),
-                                accessor:'pairSymbol',
-                            },            {
-                                label:t('home.table.column.lastPrice'),
-                                accessor:'lastPriceInToman',
-                            },            {
-                                label:t('home.table.column.last24Change'),
-                                accessor:'changeForLastIn24HoursInPercent',
-                            },            {
-                                label:t('home.table.column.market'),
-                                accessor:'marketImage',
-                            }]}/>
+                                {
+                                    label: t('home.table.column.name'),
+                                    accessor: 'name',
+                                }, {
+                                    label: t('home.table.column.symbol'),
+                                    accessor: 'pairSymbol',
+                                }, {
+                                    label: t('home.table.column.lastPrice'),
+                                    accessor: 'lastPriceInToman',
+                                }, {
+                                    label: t('home.table.column.last24Change'),
+                                    accessor: 'changeForLastIn24HoursInPercent',
+                                }, {
+                                    label: t('home.table.column.market'),
+                                    accessor: 'marketImage',
+                                }]}/>
                     }
                 </div>
+                <HomeApplicationPart/>
             </main>
 
         </div>
     )
 }
 
-export const getStaticProps = async ({ locale }:{locale:string}) => ({
+export const getStaticProps = async ({locale}: { locale: string }) => ({
     props: {
         ...(await serverSideTranslations(
             locale,

@@ -1,4 +1,4 @@
-import * as React from 'react';
+import React ,{useEffect, useState} from "react";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
@@ -89,12 +89,18 @@ interface SatrexTableProps {
 const SatrexTable: React.FC<SatrexTableProps> = ({rows, headers}) => {
     const [order, setOrder] = React.useState<Order>('asc');
     const [orderBy, setOrderBy] = React.useState('');
+    const [searchInput,setSearchInput] = React.useState('')
+    const [data,setData] = useState(rows)
 
-
+    useEffect(()=>{
+        setData(rows.filter(function(row) {
+            return row.sourceAssetPersianTitle.toLowerCase().indexOf(searchInput) != -1 ||  row.sourceAssetEnglishTitle.toLowerCase().indexOf(searchInput) != -1
+        }))
+    },[searchInput])
 
     const handleRequestSort = (
         event: React.MouseEvent<unknown>,
-        property: keyof Data,
+        property: any,
     ) => {
         const isAsc = orderBy === property && order === 'asc';
         setOrder(isAsc ? 'desc' : 'asc');
@@ -112,62 +118,67 @@ const SatrexTable: React.FC<SatrexTableProps> = ({rows, headers}) => {
 
 
     return (
-
-        <TableContainer>
-            <Table
-                sx={{minWidth: 750}}
-                aria-labelledby="tableTitle"
-            >
-                {/*<TableHead>*/}
-                {/*    <TableRow>*/}
-                {/*        {*/}
-                {/*            headers.map((item, index) => (*/}
-                {/*                <TableCell align="center" key={index}>{item.label}</TableCell>*/}
-                {/*            ))*/}
-                {/*        }*/}
-                {/*    </TableRow>*/}
-                {/*</TableHead>*/}
-                <EnhancedTableHead
-                    headers={headers}
-                    order={order}
-                    orderBy={orderBy}
-                    rowCount={rows.length}
-                    onRequestSort={handleRequestSort}
-                />
-                <TableBody>
-                    {/* if you don't need to support IE11, you can replace the `stableSort` call with:
+        <>
+            <div className="searchInputContainer">
+                <img src="./icons/searchIcon.svg" alt="search icon"/>
+                <input type="text" value={searchInput} onChange={(e)=>setSearchInput(e.target.value)} className="searchInput"/>
+            </div>
+            <TableContainer className="satrexTable">
+                <Table
+                    sx={{minWidth: 750}}
+                    aria-labelledby="tableTitle"
+                >
+                    {/*<TableHead>*/}
+                    {/*    <TableRow>*/}
+                    {/*        {*/}
+                    {/*            headers.map((item, index) => (*/}
+                    {/*                <TableCell align="center" key={index}>{item.label}</TableCell>*/}
+                    {/*            ))*/}
+                    {/*        }*/}
+                    {/*    </TableRow>*/}
+                    {/*</TableHead>*/}
+                    <EnhancedTableHead
+                        headers={headers}
+                        order={order}
+                        orderBy={orderBy}
+                        rowCount={rows.length}
+                        onRequestSort={handleRequestSort}
+                    />
+                    <TableBody>
+                        {/* if you don't need to support IE11, you can replace the `stableSort` call with:
              */}
-                    {rows.sort(getComparator(order, orderBy)).map((row, index) => {
+                        {data.sort(getComparator(order, orderBy)).map((row, index) => {
 
 
-                        return (
-                            <TableRow
-                                hover
-                                role="checkbox"
-                                tabIndex={-1}
-                                key={index}
-                            >
-                                {
-                                    headers.map(item => {
-                                        return (
-                                            <TableCell key={index} component="td" scope="row" align="center">
-                                                {row[item.accessor]}
-                                            </TableCell>
-                                        )
-                                    })
-                                }
+                            return (
+                                <TableRow
+                                    hover
+                                    role="checkbox"
+                                    tabIndex={-1}
+                                    key={index}
+                                >
+                                    {
+                                        headers.map(item => {
+                                            return (
+                                                <TableCell key={index} component="td" scope="row" align="center">
+                                                    {row[item.accessor]}
+                                                </TableCell>
+                                            )
+                                        })
+                                    }
 
-                                {/*{*/}
-                                {/*    getTds(Object.fromEntries(*/}
-                                {/*        Object.entries(row).slice(0, (headers).length),*/}
-                                {/*    ))*/}
-                                {/*}*/}
-                            </TableRow>
-                        );
-                    })}
-                </TableBody>
-            </Table>
-        </TableContainer>
+                                    {/*{*/}
+                                    {/*    getTds(Object.fromEntries(*/}
+                                    {/*        Object.entries(row).slice(0, (headers).length),*/}
+                                    {/*    ))*/}
+                                    {/*}*/}
+                                </TableRow>
+                            );
+                        })}
+                    </TableBody>
+                </Table>
+            </TableContainer>
+        </>
     );
 }
 
