@@ -1,5 +1,5 @@
 @import "common";
-
+@import "loader";
 html,
 body {
   padding: 0;
@@ -52,6 +52,7 @@ a {
 .coinSwiperSlides {
   height:100%;
   .swiper-slide{
+    margin-right:51px !important;
     height:100%;
     display:flex;
   }
@@ -100,12 +101,53 @@ body{
   background-color: #f8f7fc
 }
 
+.homeCoinList{
+  tr{
+    height:76px;
+  }
+  td{
+    padding:10px;
+  }
+}
+
+.evenColoredRow{
+  tbody{
+    tr{
+      &:nth-child(even){
+       td{
+         background:#F9F9F9;
+       }
+      }
+    }
+  }
+}
+
 .satrexTable{
   border-radius: 15px;
-  box-shadow: 0 0 27px -16px #a5a5a5;
-  padding:20px 40px;
+  box-shadow: 0 0 27px -16px #cac4c4;
+  padding:{
+    top:10px;
+    left:40px;
+    right:40px;
+    bottom:30px;
+  }
   direction: rtl;
+  background:white;
   min-height:820px;
+  position:relative;
+  .tableLoader{
+    position: absolute;
+    top:50%;
+    left:50%;
+  }
+  td{
+    border:none;
+  }
+  //tr{
+  //  :nth-child(odd) {
+  //    background: red;
+  //  }
+  //}
 }
 
 
@@ -173,4 +215,25 @@ body{
     border-top-right-radius: 0px !important;
     border-top-left-radius: 0px !important;
   }
+}
+
+@keyframes fadeIn{
+  from {
+    opacity:0;
+    top:50px;
+  }
+  to{
+    opacity:1;
+    top:0px;
+  }
+}
+
+.fadeShow{
+  -webkit-animation-fill-mode: both;
+  animation-fill-mode: both;
+  animation-name: fadeIn;
+  animation-duration:0.5s;
+  position:relative;
+  //opacity: 1;
+  //animation:fadeIn
 }

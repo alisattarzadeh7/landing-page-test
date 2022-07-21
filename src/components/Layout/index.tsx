@@ -3,13 +3,14 @@ import type {NextPage} from 'next'
 import { useRouter } from 'next/router';
 import { ReactNode } from "react";
 import Header from "./Header";
+import React from "react"
 
 interface LayoutProps{
     children:ReactNode
 }
 
 
-const index: NextPage<LayoutProps> = ({children}) => {
+const Index: React.FC<LayoutProps> = ({children}) => {
 
     const {locale} = useRouter()
 
@@ -21,4 +22,4 @@ const index: NextPage<LayoutProps> = ({children}) => {
     )
 }
 
-export default index
+export default Index

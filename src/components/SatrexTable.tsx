@@ -1,11 +1,10 @@
-import React ,{useEffect, useState} from "react";
+import React, {FunctionComponent, ReactElement, ReactNode, useEffect, useState} from "react";
 import Table from '@mui/material/Table';
 import TableBody from '@mui/material/TableBody';
 import TableCell from '@mui/material/TableCell';
 import TableContainer from '@mui/material/TableContainer';
 import TableRow from '@mui/material/TableRow';
 import {TableHead, TableSortLabel} from '@mui/material';
-
 function descendingComparator<T>(a: T, b: T, orderBy: keyof T) {
     if (b[orderBy] < a[orderBy]) {
         return -1;
@@ -46,33 +45,36 @@ function stableSort<T>(array: readonly T[], comparator: (a: T, b: T) => number) 
 
 
 
-function EnhancedTableHead(props) {
+function EnhancedTableHead(props:any) {
     const { onSelectAllClick, order, orderBy, numSelected, rowCount, onRequestSort } =
         props;
-    const createSortHandler = (property) => (event) => {
+    const createSortHandler = (property:any) => (event:any) => {
         onRequestSort(event, property);
     };
 
     return (
         <TableHead>
             <TableRow>
-                {props.headers.map((headCell,index) => (
+                {props.headers.map((headCell:any,index:number) => (
                     <TableCell
                         key={index}
-                        sortDirection={orderBy === headCell.accessor ? order : false}
+                        sortDirection={headCell.sortBy ? (orderBy === headCell.sortBy ? order : false) : undefined}
                     >
-                        <TableSortLabel
-                            active={orderBy === headCell.accessor}
-                            direction={orderBy === headCell.accessor ? order : 'asc'}
-                            onClick={createSortHandler(headCell.accessor)}
-                        >
-                            {headCell.label}
-                            {/*{orderBy === headCell.id ? (*/}
-                            {/*    <Box component="span" sx={visuallyHidden}>*/}
-                            {/*        {order === 'desc' ? 'sorted descending' : 'sorted ascending'}*/}
-                            {/*    </Box>*/}
-                            {/*) : null}*/}
-                        </TableSortLabel>
+                        {
+                            headCell.sortBy ?
+                            <TableSortLabel
+                                active={orderBy === headCell.sortBy}
+                                direction={orderBy === headCell.sortBy ? order : 'asc'}
+                                onClick={createSortHandler(headCell.sortBy)}
+                            >
+                                {headCell.label}
+                                {/*{orderBy === headCell.id ? (*/}
+                                {/*    <Box component="span" sx={visuallyHidden}>*/}
+                                {/*        {order === 'desc' ? 'sorted descending' : 'sorted ascending'}*/}
+                                {/*    </Box>*/}
+                                {/*) : null}*/}
+                            </TableSortLabel> : headCell.label
+                        }
                     </TableCell>
                 ))}
             </TableRow>
@@ -82,21 +84,32 @@ function EnhancedTableHead(props) {
 
 
 interface SatrexTableProps {
-    rows: object[],
-    headers: { label: string, accessor: string }[],
+    rows: any[] | undefined,
+    headers: { label: string, accessor: string,sortBy?:string }[],
+    isLoading:boolean,
+    rowPlaceholder: {
+        count:number,
+        component:FunctionComponent
+    }
 }
 
-const SatrexTable: React.FC<SatrexTableProps> = ({rows, headers}) => {
+const SatrexTable: React.FC<SatrexTableProps> = ({rows,isLoading, headers,rowPlaceholder:{count:PlaceholderCount,component : PlaceholderComponent}}) => {
     const [order, setOrder] = React.useState<Order>('asc');
     const [orderBy, setOrderBy] = React.useState('');
     const [searchInput,setSearchInput] = React.useState('')
-    const [data,setData] = useState(rows)
+    const [data,setData] = useState<any>([])
 
     useEffect(()=>{
+        if(rows)
         setData(rows.filter(function(row) {
             return row.sourceAssetPersianTitle.toLowerCase().indexOf(searchInput) != -1 ||  row.sourceAssetEnglishTitle.toLowerCase().indexOf(searchInput) != -1
         }))
     },[searchInput])
+
+
+    useEffect(()=>{
+        setData(rows)
+    },[rows])
 
     const handleRequestSort = (
         event: React.MouseEvent<unknown>,
@@ -106,24 +119,21 @@ const SatrexTable: React.FC<SatrexTableProps> = ({rows, headers}) => {
         setOrder(isAsc ? 'desc' : 'asc');
         setOrderBy(property);
     };
-    //
-    // const handleSelectAllClick = (event: React.ChangeEvent<HTMLInputElement>) => {
-    //     if (event.target.checked) {
-    //         const newSelecteds = rows.map((n) => n.name);
-    //         setSelected(newSelecteds);
-    //         return;
-    //     }
-    //     setSelected([]);
-    // };
 
 
     return (
         <>
             <div className="searchInputContainer">
                 <img src="./icons/searchIcon.svg" alt="search icon"/>
-                <input type="text" value={searchInput} onChange={(e)=>setSearchInput(e.target.value)} className="searchInput"/>
+                <input type="text" value={searchInput} onChange={(e)=>setSearchInput(e.target.value)} disabled={isLoading} className="searchInput"/>
             </div>
-            <TableContainer className="satrexTable">
+            <TableContainer className="satrexTable homeCoinList">
+                {/*{*/}
+                {/*    isLoading &&*/}
+                {/*    <div className="tableLoader">*/}
+                {/*        <Loader/>*/}
+                {/*    </div>*/}
+                {/*}*/}
                 <Table
                     sx={{minWidth: 750}}
                     aria-labelledby="tableTitle"
@@ -141,13 +151,13 @@ const SatrexTable: React.FC<SatrexTableProps> = ({rows, headers}) => {
                         headers={headers}
                         order={order}
                         orderBy={orderBy}
-                        rowCount={rows.length}
                         onRequestSort={handleRequestSort}
                     />
+
                     <TableBody>
-                        {/* if you don't need to support IE11, you can replace the `stableSort` call with:
-             */}
-                        {data.sort(getComparator(order, orderBy)).map((row, index) => {
+                        {(isLoading && !data) && Array.from(Array(PlaceholderCount).keys()).map((_,index)=> <PlaceholderComponent key={index}/>)}
+
+                        { data && data.sort(getComparator(order, orderBy)).map((row:any, index:number) => {
 
 
                             return (
@@ -156,6 +166,8 @@ const SatrexTable: React.FC<SatrexTableProps> = ({rows, headers}) => {
                                     role="checkbox"
                                     tabIndex={-1}
                                     key={index}
+                                    className="fadeShow"
+                                    style={{animationDelay:(index / 7) + 's'}}
                                 >
                                     {
                                         headers.map(item => {

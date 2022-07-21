@@ -11,11 +11,11 @@ const Header: React.FC = () => {
     const [headerScrolled,setHeaderScrolled] = useState(false)
 
     useEffect(()=>{
-        window.addEventListener('headerSwitched',(e)=>{
+        document.addEventListener('headerSwitched',(e)=>{
                             console.log('headerSwitched ')
             setHeaderScrolled(true)
         })
-        window.addEventListener('headerReturned',(e)=>{
+        document.addEventListener('headerReturned',(e)=>{
                             console.log('headerReturned ')
             setHeaderScrolled(false)
         })
@@ -51,8 +51,12 @@ const Header: React.FC = () => {
                         <Grid xs={1} item/>
                         <Grid xs={5} item className="sessions-buttons" >
                             <Grid container className=" row-reverse">
-                                <SatrexButton label='ثبت نام' variant="contained" color="orange"/>&nbsp;&nbsp;&nbsp;
-                                <SatrexButton label='ورود' variant="outlined" color="white"/>
+                                <SatrexButton label='ثبت نام' variant="contained"
+                                              // @ts-ignore
+                                              color="orange"/>&nbsp;&nbsp;&nbsp;
+                                <SatrexButton label='ورود' variant="outlined"
+                                              // @ts-ignore
+                                              color="white"/>
 
                             </Grid>
                         </Grid>

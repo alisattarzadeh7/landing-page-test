@@ -3,7 +3,7 @@ import {Button, ButtonProps} from "@mui/material";
 
 interface satrexButtonProps extends  ButtonProps {
     label:string
-    style:object
+    style?:object
 }
 
 const SatrexButton: React.FC<satrexButtonProps > = (props) => {

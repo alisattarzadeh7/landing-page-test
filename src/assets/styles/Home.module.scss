@@ -87,6 +87,10 @@
 
 .coinListTableContainer{
   padding:0 9%;
+  min-height:1055px;
+  table{
+    overflow:hidden;
+  }
 }
 
 .coinListTitleStyles{
@@ -109,21 +113,41 @@
 }
 
 .applicationPart{
-  padding:150px;
+  padding:{
+    top:70px;
+    left:100px;
+    right:100px;
+    bottom:100px;
+  };
   margin-top:100px;
-  min-height:700px;
+  height:80vh;
+  min-height:550px;
   position:relative;
-  margin-bottom:100px;
-  background: #250D72 url('/assets/images/secondryShadow.svg');
+  //margin-bottom:100px;
+  background: #250D72 url('/assets/images/secondryShadow.svg') center;
   background-size:cover;
+  span{
+    color:white;
+  }
+  .title{
+    font-family: YekanBold !important;
+    font-size:50px;
+    width:100%;
+  }
+  .secondaryTitle{
+    margin-top: 5px;
+    font-size:30px;
+    width:100%;
+  }
 }
 
 .phonesContainer{
   position: absolute;
-  left: 7%;
-  top:17%;
-  width:750px;
-  height:500px;
+  left: 0;
+  top:0;
+  width:55%;
+  max-width:1475px;
+  height:100%;
 }
 
 .pairSymbolStyle{
@@ -142,4 +166,10 @@
 }
 .tetherPrice{
   font-family:IranYekan !important;
+}
+
+.blogLink{
+  color:#3DA0B8;
+  font-family:YekanBold !important;
+  font-size:20px;
 }

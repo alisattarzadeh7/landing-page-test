@@ -4,8 +4,12 @@ import Image from "next/image";
 const HomeApplicationPart: React.FC = () => {
     return (
         <div className={styles.applicationPart}>
-            <h1>اپلیکشن ساتکرس</h1>
-            <h1> سازگار با چندین دستگاه، تجارت را با ایمنی و راحتی شروع کنید.</h1>
+            <div>
+                <span className={styles.title}>اپلیکشن ساتکرس</span>
+            </div>
+            <div className="mt-20">
+                <span className={styles.secondaryTitle}> سازگار با چندین دستگاه، تجارت را با ایمنی و راحتی شروع کنید.</span>
+            </div>
            <div className={styles.phonesContainer}>
                <Image src="/assets/images/phones.svg" layout='fill'/>
            </div>

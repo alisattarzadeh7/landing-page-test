@@ -5,7 +5,7 @@ import textLogo from "../../assets/images/loginComponent/TextLogo.svg"
 import styles from "./logoStyles.module.scss"
 import { motion, useViewportScroll, useTransform } from 'framer-motion'
 
-const index: React.FC = () => {
+const Index: React.FC = () => {
 
     const { scrollY } = useViewportScroll()
     const y = useTransform(scrollY, [0, 200], [-0, -100])
@@ -41,4 +41,4 @@ const index: React.FC = () => {
     )
 }
 
-export default index
+export default Index

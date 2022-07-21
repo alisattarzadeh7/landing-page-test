@@ -8,7 +8,7 @@ import {CacheProvider} from '@emotion/react';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import useIsLtr from "../utils/hooks/useIsLtr"
 import { ltrTheme, rtlTheme} from "./theme"
-
+import { SWRConfig } from 'swr'
 interface ProviderProps {
     children: ReactNode
 }
@@ -32,6 +32,12 @@ const Providers: NextPage<ProviderProps> = ({children}) => {
 
     return (
         <div dir={!isLtr ? 'rtl' : 'ltr'}>
+            <SWRConfig
+                value={{
+                    refreshInterval: 5000,
+                    revalidateOnFocus:false,
+                }}
+            >
             <CacheProvider value={isLtr ? cacheLtr : cacheRtl}>
                 <ThemeProvider theme={createTheme(
                     isLtr ? ltrTheme : rtlTheme
@@ -41,6 +47,7 @@ const Providers: NextPage<ProviderProps> = ({children}) => {
                 </Provider>
                 </ThemeProvider>
             </CacheProvider>
+            </SWRConfig>
         </div>
     )
 }

@@ -1,7 +1,6 @@
 import {Grid} from '@mui/material'
 import type {NextPage} from 'next'
 import Head from 'next/head'
-import Image from 'next/image'
 import Coin from '../http/models/Coin'
 import styles from "../assets/styles/Home.module.scss"
 import 'swiper/css';
@@ -12,21 +11,21 @@ import {serverSideTranslations} from 'next-i18next/serverSideTranslations';
 import {useTranslation} from 'next-i18next'
 import SatrexButton from "../components/SatrexButton";
 import MainLogo from "../components/MainLogo/index";
-import SatrexTable from "../components/SatrexTable";
-import searchIcon from "../../public/icons/searchIcon.svg"
 import HomeApplicationPart from "../components/HomeApplicationPart";
 import {motion, useViewportScroll, useTransform} from 'framer-motion'
 import React, {useEffect} from "react";
 import {headerReturned, headerSwitched} from "../utils/events";
-import PercentageFormater from "../components/PercentageFormater";
+import HomeBlogPart from "../components/HomeBlogPart";
+import HomeCoinsList from "../components/HomeCoinsList";
 
-interface HomeProps {
-    // coins: Coin[]
+const coinListFilterAdapter = async (fn:()=>Promise<Coin[]>)=>{
+    const coinList : Coin[] =  await fn()
+    return coinList.filter(item => item.destinationAssetSymbol !== 'USDT')
 }
 
-const Home: NextPage<HomeProps> = () => {
+const Home: NextPage = () => {
 
-    const {data, error} = useSWR('getALlCoins', Coin.getALlCoins)
+    const {data, error,isValidating} = useSWR('getALlCoins',async ()=> coinListFilterAdapter(Coin.getALlCoins))
     const {t} = useTranslation('common');
     const {scrollY} = useViewportScroll()
     const y = useTransform(scrollY, [0, 200], [-0, -100])
@@ -38,11 +37,11 @@ const Home: NextPage<HomeProps> = () => {
     useEffect(()=>{
         scrollY.onChange(value=>{
             if(value > 500 && !headerSwitchedTemp){
-                window.dispatchEvent(headerSwitched);
+                document.dispatchEvent(headerSwitched);
                 headerSwitchedTemp = true
                 headerReturnedTemp = false
             }else if(value < 500 && !headerReturnedTemp){
-                window.dispatchEvent(headerReturned);
+                document.dispatchEvent(headerReturned);
                 headerSwitchedTemp = false
                 headerReturnedTemp = true
             }
@@ -80,16 +79,15 @@ const Home: NextPage<HomeProps> = () => {
                             <motion.div style={{y, opacity}}>
                                 <SatrexButton label={t('home.doRegisterBtn')} style={{minWidth: 150}}
                                               variant="contained"
+                                              //@ts-ignore
                                               color="orange"/>
                             </motion.div>
                         </div>
                         <div className="flex column">
-                            <motion.div className={styles.coinSwiper} style={{y:coinSwiperY,opacity:coinSwiperOpacity}}>
-                                {
-                                    data &&
+                            <motion.div className={styles.coinSwiper}  style={{y:coinSwiperY,opacity:coinSwiperOpacity}}>
                                     <HomeCoinSwiper
-                                        coins={data.filter(item => item.destinationAssetSymbol !== 'USDT')}/>
-                                }
+                                        loading={isValidating}
+                                        coins={data}/>
                             </motion.div>
                             <div className={styles.campaign}>
                                 <Grid container spacing={4}>
@@ -111,42 +109,9 @@ const Home: NextPage<HomeProps> = () => {
 
                     </div>
                 </div>
-                <div className={styles.coinListTableContainer}>
-                    {
-                        data &&
-                        <SatrexTable
-                            rows={data.filter(item => item.destinationAssetSymbol !== 'USDT').map(item => ({
-                                ...item,
-                                name: <div className="flex middle">
-                                    <img src={item.sourceAssetImageAddress} style={{width: 35}}
-                                         alt="coin image"/>&nbsp;&nbsp;
-                                    <span style={{height: 'fit-content'}}>{item.sourceAssetPersianTitle}</span>
-                                </div>,
-                                marketImage: <>
-                                    <img src={item.sourceAssetUrlGraphData} alt="market chart image"/>
-                                </>,
-                                changeForLastIn24HoursInPercent:<span className="faNum"><PercentageFormater value={item.changeForLastIn24HoursInPercent }/></span>,
-                            }))}
-                            headers={[
-                                {
-                                    label: t('home.table.column.name'),
-                                    accessor: 'name',
-                                }, {
-                                    label: t('home.table.column.symbol'),
-                                    accessor: 'pairSymbol',
-                                }, {
-                                    label: t('home.table.column.lastPrice'),
-                                    accessor: 'lastPriceInToman',
-                                }, {
-                                    label: t('home.table.column.last24Change'),
-                                    accessor: 'changeForLastIn24HoursInPercent',
-                                }, {
-                                    label: t('home.table.column.market'),
-                                    accessor: 'marketImage',
-                                }]}/>
-                    }
-                </div>
+                <HomeCoinsList isValidating={isValidating} coinList={data}/>
                 <HomeApplicationPart/>
+                <HomeBlogPart/>
             </main>
 
         </div>

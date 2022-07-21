@@ -16,6 +16,9 @@ const componentsOverides = {
         },
         white:{
             main:'#fff'
+        },
+        lightBlue:{
+            main:'#1c428b'
         }
     } as Palette,
 }
